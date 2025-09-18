@@ -87,6 +87,16 @@ class _LogginScreenState extends State<LogginScreen> {
               SizedBox(
                 width: 375,
                 child: TextField(
+                  onChanged: (value){
+                    if (isHandsUp != null){ 
+                      //No tapar los ojos al escribir
+
+                      isHandsUp!.change(true);
+                    }
+                    if (isChecking == null) return;
+                    //Activa el modo chismoso
+                    isChecking!.change(false);
+                  },
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
                     hintText: "Password",
