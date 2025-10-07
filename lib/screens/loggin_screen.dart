@@ -21,8 +21,39 @@ class _LogginScreenState extends State<LogginScreen> {
   SMITrigger? trigSuccess; //Se emociona
   SMITrigger? trigFail; //Se pone sad 
 
+  //1) Focus Node (punto donde está el foco)
+  final emailFocus = FocusNode();
+  final passFocus = FocusNode();
+
+  //2) Listener (escuchar los cambios de foco; OYENTES o chismosos) 
+  @override
+  void initState() {
+    super.initState();
+    emailFocus.addListener((){
+      if (emailFocus.hasFocus){
+        //Manos abajo en gmail
+        isHandsUp?.change(false);
+      } 
+    });
+
+    passFocus.addListener((){
+      //Manos arriba en password
+      isHandsUp?.change(passFocus.hasFocus);
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
+
+    //Liberación de recursos/limpieza de focos
+    @override 
+    void dispose() {
+      emailFocus.dispose();
+      passFocus.dispose();
+      super.dispose();
+    }
+
     // Obtener el tamaño de la pantalla del dispositivo
     final Size size = MediaQuery.of(context).size;
 
@@ -61,12 +92,17 @@ class _LogginScreenState extends State<LogginScreen> {
               // Campo Email
               SizedBox(
                 width: 375,
-                child: TextField(
+                child: 
+                //Email
+                TextField(
+                  //Asignas el focusnode al textfield
+                  //llamas a la familia chismosa
+                  focusNode: emailFocus,
                   onChanged: (value){
                     if (isHandsUp != null){ 
                       //No tapar los ojos al escribir
 
-                      isHandsUp!.change(false);
+                      //isHandsUp!.change(false);
                     }
                     if (isChecking == null) return;
                     //Activa el modo chismoso
@@ -87,11 +123,14 @@ class _LogginScreenState extends State<LogginScreen> {
               SizedBox(
                 width: 375,
                 child: TextField(
+                  //Asignas el focusnode al textfield
+                  //llamas a la familia chismosa
+                  focusNode: passFocus,
                   onChanged: (value){
                     if (isHandsUp != null){ 
                       //No tapar los ojos al escribir
 
-                      isHandsUp!.change(true);
+                      //isHandsUp!.change(true);
                     }
                     if (isChecking == null) return;
                     //Activa el modo chismoso
@@ -177,3 +216,7 @@ class _LogginScreenState extends State<LogginScreen> {
     );
   }
 }
+// Expresión regular: Es como un buscador que encuentra patrones en un texto.
+//Foco: Es una expresión para indicar cuando le damos click a algo.
+//Hover: Es una expresión para indicar cuando pasamos el mouse sobre algo.
+//Regex: REGular EXpression
