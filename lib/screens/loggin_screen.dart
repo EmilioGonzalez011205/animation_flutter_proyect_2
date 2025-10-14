@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
+//Importar librería para timer
+import 'dart:async';
 
 class LogginScreen extends StatefulWidget {
   const LogginScreen({super.key});
@@ -21,9 +23,15 @@ class _LogginScreenState extends State<LogginScreen> {
   SMITrigger? trigSuccess; //Se emociona
   SMITrigger? trigFail; //Se pone sad 
 
-  //1) Focus Node (punto donde está el foco)
+  //1.1) Focus Node (punto donde está el foco)
   final emailFocus = FocusNode();
   final passFocus = FocusNode();
+
+  //3.2 Crear la variable timer para detener la mirada al dejar de teclear
+  Timer? _typingDebounce;
+
+  //2.1 Variable para recorrido de la mirada
+  SMINumber? numLook;
 
   //2) Listener (escuchar los cambios de foco; OYENTES o chismosos) 
   @override
@@ -33,6 +41,8 @@ class _LogginScreenState extends State<LogginScreen> {
       if (emailFocus.hasFocus){
         //Manos abajo en gmail
         isHandsUp?.change(false);
+        //Mirada neutral al enfocar email
+        numLook?.value = 50.0;
       } 
     });
 
@@ -51,6 +61,7 @@ class _LogginScreenState extends State<LogginScreen> {
     void dispose() {
       emailFocus.dispose();
       passFocus.dispose();
+      _typingDebounce?.cancel();
       super.dispose();
     }
 
@@ -85,13 +96,15 @@ class _LogginScreenState extends State<LogginScreen> {
                       isHandsUp = controller!.findSMI('isHandsUp');
                       trigSuccess = controller!.findSMI('trigSuccess');
                       trigFail = controller!.findSMI('trigFail');
+                      //2.3Enlazar la variable con la animación
+                      numLook = controller!.findSMI('numLook');
                   },
                 ),
               ),
               const SizedBox(height: 10),
               // Campo Email
               SizedBox(
-                width: 375,
+                width: size.width,
                 child: 
                 //Email
                 TextField(
@@ -100,9 +113,24 @@ class _LogginScreenState extends State<LogginScreen> {
                   focusNode: emailFocus,
                   onChanged: (value){
                     if (isHandsUp != null){ 
-                      //No tapar los ojos al escribir
+                      //2.4 Implementando numlook
+                      //"Estoy escribiendo, no me tapes los ojos"
+                      isChecking!.change(true);
 
-                      //isHandsUp!.change(false);
+                      //Ajuste de límite de 0 a 100
+                      final look = (value.length / 80.0 * 100.0 ).clamp(
+                        0.0,
+                        100.0);
+                        numLook?.value = look;
+
+                        //3.3 Debounce: Si vuelve a teclear, reinicia el contador
+                        _typingDebounce?.cancel(); //Cancela cualquier timer existente
+                        _typingDebounce = Timer(const Duration(seconds: 3), (){
+                          if (! mounted){
+                            return; //Si la pantalla se cierra
+                          }
+                          isChecking?.change (false);
+                        });
                     }
                     if (isChecking == null) return;
                     //Activa el modo chismoso
@@ -121,7 +149,7 @@ class _LogginScreenState extends State<LogginScreen> {
               const SizedBox(height: 15),
               // Campo Password con icono de mostrar/ocultar
               SizedBox(
-                width: 375,
+                width: size.width,
                 child: TextField(
                   //Asignas el focusnode al textfield
                   //llamas a la familia chismosa
@@ -219,4 +247,7 @@ class _LogginScreenState extends State<LogginScreen> {
 // Expresión regular: Es como un buscador que encuentra patrones en un texto.
 //Foco: Es una expresión para indicar cuando le damos click a algo.
 //Hover: Es una expresión para indicar cuando pasamos el mouse sobre algo.
-//Regex: REGular EXpression
+//Regex: REGular EXpression 
+//Clamp: En programación es limitar un valor dentro de un rango específico, en la vida real,
+// es como un tope o límite que evita que algo se salga de ciertos parámetros establecidos.}
+//Clamp se traduce como: "abrazadera"
