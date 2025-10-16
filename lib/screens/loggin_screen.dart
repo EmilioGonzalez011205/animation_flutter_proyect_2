@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 //Importar librería para timer
@@ -30,10 +32,67 @@ class _LogginScreenState extends State<LogginScreen> {
   //3.2 Crear la variable timer para detener la mirada al dejar de teclear
   Timer? _typingDebounce;
 
-  //2.1 Variable para recorrido de la mirada
+  //4.1 Controllers; verfica o guarda la información que el usuario inserta.
+  final emailCtrl = TextEditingController();
+  final passCtrl = TextEditingController();
+
+
+  //4.2 Errores para pintar o mostrar en la UI.
+  String? emailError;
+  String? passError;
+
+  //4.3 Validadores 
+  bool isValidEmail(String email) {
+    final re = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
+    return re.hasMatch(email);
+  }
+
+  bool isValidPassword(String pass) {
+    // mínimo 8, una mayúscula, una minúscula, un dígito y un especial
+    final re = RegExp(
+      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$',
+    );
+    return re.hasMatch(pass);
+  }
+
+  //4.4 Acción al botón
+  void _onLogin(){
+    final email = emailCtrl.text.trim();
+    final pass = passCtrl.text;
+  
+
+  //Recalcular rrores 
+  final eError = isValidEmail(email) ? null : 'Email no válido';
+  final pError = isValidPassword(pass) ? null : 
+  'Mínimo 8 caracteres, 1 mayúsucla, 1 minúscula, 1 número y 1 caracterespecial';
+
+// 4.5 Para avisar que hubo un cambio
+  setState((){
+    emailError = eError;
+    passError = pError;
+  });
+
+  //4.6 Cerrar el teclado y bajar
+FocusScope.of(context).unfocus();
+_typingDebounce?.cancel();
+isChecking?.change(false);
+isHandsUp?.change(false);
+numLook?.value = 50.0; // Mirada neutral
+
+
+//4.7 Activar triggers
+ if (eError == null && pError == null){
+  trigSuccess?.fire();
+ }
+ else {
+  trigFail?.fire();}
+}
+
+
+  //Variable para recorrido de la mirada
   SMINumber? numLook;
 
-  //2) Listener (escuchar los cambios de foco; OYENTES o chismosos) 
+  //2.1) Listener (escuchar los cambios de foco; OYENTES o chismosos) 
   @override
   void initState() {
     super.initState();
@@ -56,9 +115,11 @@ class _LogginScreenState extends State<LogginScreen> {
   @override
   Widget build(BuildContext context) {
 
-    //Liberación de recursos/limpieza de focos
+    //1.4Liberación de recursos/limpieza de focos
     @override 
     void dispose() {
+      emailCtrl.dispose();
+      passCtrl.dispose();
       emailFocus.dispose();
       passFocus.dispose();
       _typingDebounce?.cancel();
@@ -108,14 +169,16 @@ class _LogginScreenState extends State<LogginScreen> {
                 child: 
                 //Email
                 TextField(
-                  //Asignas el focusnode al textfield
+                  //1.3 Asignas el focusnode al textfield
                   //llamas a la familia chismosa
                   focusNode: emailFocus,
+                  //4.8 Enlazar controller a TextField
+                  controller: emailCtrl, 
                   onChanged: (value){
-                    if (isHandsUp != null){ 
+
                       //2.4 Implementando numlook
                       //"Estoy escribiendo, no me tapes los ojos"
-                      isChecking!.change(true);
+                      isChecking?.change(true);
 
                       //Ajuste de límite de 0 a 100
                       final look = (value.length / 80.0 * 100.0 ).clamp(
@@ -131,13 +194,15 @@ class _LogginScreenState extends State<LogginScreen> {
                           }
                           isChecking?.change (false);
                         });
-                    }
+                    
                     if (isChecking == null) return;
                     //Activa el modo chismoso
                     isChecking!.change(true);
                   },
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
+                    //4.9 Mostrar el texto del error 
+                    errorText: emailError,
                     hintText: "Email",
                     prefixIcon: const Icon(Icons.email),
                     border: OutlineInputBorder(
@@ -152,6 +217,8 @@ class _LogginScreenState extends State<LogginScreen> {
                 width: size.width,
                 child: TextField(
                   //Asignas el focusnode al textfield
+                  //4.9 Enlazar controller a TextField
+                  controller: passCtrl, 
                   //llamas a la familia chismosa
                   focusNode: passFocus,
                   onChanged: (value){
@@ -166,6 +233,8 @@ class _LogginScreenState extends State<LogginScreen> {
                   },
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
+                    //4.9 Mosrtrar el texto del error
+                    errorText: passError,
                     hintText: "Password",
                     prefixIcon: const Icon(Icons.lock),
                     suffixIcon: IconButton(
@@ -206,9 +275,8 @@ class _LogginScreenState extends State<LogginScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                onPressed: () {
-                  //TODO: Acción al presionar el botón
-                },
+                //4.10 Llamar a la función de login
+                onPressed:_onLogin,
                 child: Text('Loggin', style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,
