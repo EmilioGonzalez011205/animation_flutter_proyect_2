@@ -14,3 +14,20 @@ Rive is an animation design and creation tool that allows you to create interact
 State machines are a component of River to make animations respond to user input.
 
 
+## Technologies
+The technologies used for this project are Flutter, an open-source framework from Google for creating cross-platform applications with a single codebase; Visual Studio, an integrated development environment (IDE) from Microsoft used to create applications on different platforms and programming languages; Rive, a design and animation tool that allows you to create interactive animations in real time for any platform; State Machines, Rive components to make animations respond to user input; FocusNode, are the points where the foci are located, that is, the focus points; Regex, is the union of regular expression words, is a search engine that finds patterns in the text; Listeners, are objects that wait for and react to events; Controller, are components that handle the logic and communication between components of an application.
+
+## Basic code structure
+
+The code works with two key files in the lib folder, the main which is the folder where the application is basically executed and displayed, and the Loggin_Screen file which is basically where the Login screen that the main displays is built, within this file the logic is built using the technologies seen, the FocusNode are used to focus attention on the email and password fields, state machines are used to turn animations on or off, controllers are used to decide that, listeners to notice changes, etc.
+
+## Demo
+
+
+## General data
+Asignature: Graphication
+Teacher: Rodrigo Fidel Gaxiola Sosa
+The following link is to the project of the animation creator "dexterc," who made it possible to create the login screen using his work:
+https://rive.app/marketplace/3645-7621-remix-of-login-machine/ 
+
+
