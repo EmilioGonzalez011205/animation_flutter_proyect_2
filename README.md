@@ -1,16 +1,16 @@
-# animation_flutter_proyect_2
+# Rive Animation_Login_Proyect_J.E.G.F.
 
-A new Flutter project.
+This project shows (via commits) the step-by-step process for building a login screen animation with responses (of the same) to too many actions or stimuli.
 
-## Getting Started
+## Previous concepts.
 
-This project is a starting point for a Flutter application.
+## Features:
+The login animation screen has a drawing of a bear that reacts to various stimuli, for example: When we press the email section, the bear directs his gaze to that field, and follows it while we write; if we press the password section, the bear will cover his eyes, in addition the password will be hidden by default, in addition, the field has a button to show the password and hide it again, finally, if one of the fields has an error, the bear will have a reaction of concern, but if both fields are valid, the bear will show a reaction of happiness.
 
-A few resources to get you started if this is your first Flutter project:
+## Rive and State machine.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Rive is an animation design and creation tool that allows you to create interactive animations in real time for any platform.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+State machines are a component of River to make animations respond to user input.
+
+
