@@ -22,7 +22,7 @@ The technologies used for this project are Flutter, an open-source framework fro
 The code works with two key files in the lib folder, the main which is the folder where the application is basically executed and displayed, and the Loggin_Screen file which is basically where the Login screen that the main displays is built, within this file the logic is built using the technologies seen, the FocusNode are used to focus attention on the email and password fields, state machines are used to turn animations on or off, controllers are used to decide that, listeners to notice changes, etc.
 
 ## Demo
-
+![Ejemplo de funcionamiento](https://raw.githubusercontent.com/EmilioGonzalez011205/animation_flutter_proyect_2/6f0fad76662b86a905c9d71615f3114736033ea7/assets/Demo.gif)
 
 ## General data
 Asignature: Graphication
